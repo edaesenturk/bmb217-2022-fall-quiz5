@@ -1,8 +1,7 @@
 """
-ad soyad = 
-numara = 
+ad soyad = EDA ESENTÜRK
+numara = 20217170071
 """
-
 
 class Hesap: 
     """Hesap ve harcama bilgilerini tutan sınıf"""
@@ -15,23 +14,34 @@ class Hesap:
             soyad (str): kişi soyadı
             baslangic_bakiyesi (str): hesap açılış bakiyesi
         """ 
+        self.__ad=ad
+        self.__soyad=soyad
+        self.__bakiye=0
+        self.__hesap_hareketleri=[]
+        self.__hareket_ekle("Başlangıç bakiyesi",baslangic_bakiyesi)
+
 
  
+    @property
     def ad(self):
         """ad property getter
-
+        
         Returns:
             str: adın ilk üç harfi ve 3 yıldız
             örnek: Ayş***
-        """ 
+        """
+        return self.__ad[:3]+ "***"
  
+    @ad.setter
     def ad(self,value):
         """ad setter
 
         Args:
             value (str): kişi adı
-        """ 
- 
+        """
+        self.__ad = value
+
+    @property
     def soyad(self):
         """soyad setter
 
@@ -39,21 +49,27 @@ class Hesap:
             str: soyadın ilk üç harfi ve 3 yıldız
             örnek: Yıl***
         """ 
+        return self.__soyad[:3]+ "***"
  
+    @soyad.setter
     def soyad(self,value):
         """soyad setter
 
         Args:
             value (str): kişi soyadı
         """ 
+        self.__soyad = value
  
+    @property
     def bakiye(self):
         """bakiye property
 
         Returns:
             float: kişi bakiyesi
-        """ 
+        """
+        return self.__bakiye
  
+    @bakiye.setter
     def bakiye(self,value):
         """bakiye setter
 
@@ -63,7 +79,11 @@ class Hesap:
         Raises:
             AttributeError: Bakiye değiştirilemez!
         """ 
-
+       
+        raise AttributeError('Bakiye değiştirilemez!')
+        
+            
+    
     def __hareket_ekle(self,aciklama,miktar):
         """hareket ekle methodu
 
@@ -71,6 +91,9 @@ class Hesap:
             aciklama (str): hareket açıklaması
             miktar (float): miktar 
         """ 
+        self.__hesap_hareketleri.append(f"*{aciklama},{miktar}")
+        self.__bakiye+=miktar
+
 
     def yatir(self,value):
         """para yatirma methodu
@@ -82,6 +105,10 @@ class Hesap:
         Raises:
             AttributeError: Yatırılan miktar 0'dan büyük olmalıdır!
         """ 
+        if value <0:
+            raise AttributeError("Yatırılan miktar 0'dan büyük olmalıdır!")
+        else:
+            self.__hareket_ekle("Para Yatırma",value)
 
     def harca(self,aciklama,miktar):
         """harcama methodu
@@ -97,7 +124,15 @@ class Hesap:
             miktar bakiyeden büyük olursa aşağıdaki hata gerçekleşir
         Raises:
             AttributeError: Bakiye yetersiz!
-        """ 
+        """
+        
+        if miktar <0:
+            raise AttributeError("Harcanan miktar 0'dan büyük olmalıdır!")
+        elif miktar>self.__bakiye:
+            raise AttributeError("Bakiye yetersiz!")
+
+        else:
+            self.__hareket_ekle(aciklama,-miktar)
 
     def dokum(self):
         """hesap dokumu methodu 
@@ -107,4 +142,10 @@ class Hesap:
         sonra hesap bakiyesi yazılır
         sonra ------ yazar 20 çizgi
         
-        """ 
+        """
+        print(20*"-")
+        print(f'{self.ad},{self.soyad}')
+        for hareket in self.__hesap_hareketleri:
+            print(hareket)        
+        print(f'Hesap Bakiyesi:{self.bakiye}')        
+        print(20*"-")
